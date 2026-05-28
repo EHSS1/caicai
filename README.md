@@ -199,3 +199,115 @@ Usuário preenche → Quote.tsx (apresentação)
 - **Types/Interfaces**: PascalCase (`QuoteFormData`)
 - **Imports**: sempre via alias `@/` (ex: `@/components/ui/FeatureCard`)
 - **Exports**: default export por arquivo de componente; named exports em constants e types
+
+---
+
+## Guia de Alterações
+
+Referência rápida de **onde mexer** para cada tipo de mudança comum no projeto.
+
+### 🔤 Textos e Conteúdo das Seções
+
+| O que mudar | Arquivo |
+|---|---|
+| Links e nomes do menu de navegação | `src/constants/navigation.ts` → array `NAV_ITEMS` |
+| Textos da seção Hero (slogan, botões) | `src/components/sections/Hero.tsx` |
+| Textos da seção Sobre Nós | `src/components/sections/About.tsx` |
+| Valores da empresa (ícones, títulos, descrições) | `src/components/sections/About.tsx` → array `values` |
+| Texto e descrição da Brinquedoteca | `src/components/sections/Playroom.tsx` |
+| Categorias da Brinquedoteca (botões) | `src/constants/playroom.ts` → `PLAYROOM_CATEGORIES` |
+| Cards de features da Brinquedoteca | `src/constants/playroom.ts` → `PLAYROOM_FEATURES` |
+| Texto e descrição das Oficinas | `src/components/sections/Workshops.tsx` |
+| Tipos de oficinas (ícone, nome, descrição) | `src/constants/workshops.ts` → `WORKSHOP_TYPES` |
+| Texto e descrição dos Adicionais | `src/components/sections/Additionals.tsx` |
+| Lista de itens adicionais | `src/constants/additionals.ts` → `ADDITIONAL_ITEMS` |
+| Texto do formulário de orçamento | `src/components/sections/Quote.tsx` |
+
+---
+
+### 🖼️ Imagens
+
+Todas as imagens ficam em `public/images/`. Para trocar uma imagem:
+1. Coloque o novo arquivo em `public/images/`
+2. Atualize o caminho no componente correspondente:
+
+| Imagem | Componente que a usa |
+|---|---|
+| `hero-logo.png` | `src/components/sections/Hero.tsx` e `src/components/layout/Header.tsx` |
+| `about-children.png` | `src/components/sections/About.tsx` |
+| `playroom-setup.png` | `src/components/sections/Playroom.tsx` |
+| `workshops-activity.png` | `src/components/sections/Workshops.tsx` |
+| `additionals-scene.png` | `src/components/sections/Additionals.tsx` |
+| `quote-banner.webp` | `src/components/sections/Quote.tsx` |
+| `favicon.png` | `index.html` → tag `<link rel="icon">` |
+
+---
+
+### 📞 Informações de Contato e Redes Sociais
+
+Tudo no rodapé está em `src/components/layout/Footer.tsx`:
+
+- **Telefone** → linha com `<Phone />` e o número em `<span>`
+- **E-mail** → linha com `<Mail />` e o endereço em `<span>`
+- **Endereço** → linha com `<MapPin />` e o local em `<span>`
+- **Link do Instagram** → atributo `href` na tag `<a>` com `<Instagram />`
+
+---
+
+### 🎨 Cores, Fontes e Estilos Visuais
+
+| O que mudar | Arquivo |
+|---|---|
+| Cores principais do sistema de design | `tailwind.config.js` → `theme.extend.colors.brand` |
+| Fonte do corpo (parágrafo) | `tailwind.config.js` → `theme.extend.fontFamily.sans` |
+| Fonte dos títulos (display) | `tailwind.config.js` → `theme.extend.fontFamily.display` |
+| Gradiente do fundo do Hero | `src/index.css` → `.gradient-sky` |
+| Animação de flutuação das nuvens | `src/index.css` → `@keyframes float` e `.cloud-animation` |
+| Animação de entrada do conteúdo | `src/index.css` → `@keyframes fadeInUp` e `.fade-in-up` |
+| Efeito hover dos botões | `src/index.css` → `.button-hover` |
+| Cor de fundo geral da página | `src/App.tsx` → classe na `<div>` raiz |
+
+---
+
+### 📋 Formulário de Orçamento
+
+| O que mudar | Arquivo |
+|---|---|
+| Adicionar/remover campos do formulário | `src/types/quote.ts` → interface `QuoteFormData` + `src/components/sections/Quote.tsx` |
+| Opções do select "Tipo de Evento" | `src/components/sections/Quote.tsx` → elementos `<option>` |
+| Lógica de envio / tratamento de erro | `src/hooks/useQuoteForm.ts` → função `handleSubmit` |
+| URL ou cabeçalhos da requisição ao Supabase | `src/services/quoteService.ts` → função `submitQuoteRequest` |
+| Mensagem de sucesso após envio | `src/components/sections/Quote.tsx` → bloco `{submitted && ...}` |
+| Duração da mensagem de sucesso (padrão: 5s) | `src/hooks/useQuoteForm.ts` → `setTimeout(..., 5000)` |
+
+---
+
+### 🔑 Credenciais e Ambiente
+
+Todas as chaves ficam no arquivo `.env` na raiz (nunca commitado):
+
+```env
+VITE_SUPABASE_URL=https://seu-projeto.supabase.co
+VITE_SUPABASE_ANON_KEY=sua-anon-key
+```
+
+Para obter esses valores: acesse o [Supabase Dashboard](https://supabase.com/dashboard) → seu projeto → **Settings → API**.
+
+---
+
+### ➕ Adicionar uma Nova Seção
+
+1. Crie `src/components/sections/NomeDaSecao.tsx`
+2. Se a seção tiver dados estáticos, crie `src/constants/nomeDaSecao.ts`
+3. Importe e adicione o componente em `src/App.tsx` dentro de `<main>`
+4. Adicione o link de navegação em `src/constants/navigation.ts`
+
+---
+
+### 🗄️ Banco de Dados (Supabase)
+
+| O que mudar | Arquivo |
+|---|---|
+| Schema da tabela `quote_requests` | `supabase/functions/send-quote-request/migrations/*.sql` |
+| Lógica de inserção no banco | `supabase/functions/send-quote-request/index.ts` |
+| Validação dos dados recebidos | `supabase/functions/send-quote-request/index.ts` → bloco de validação |
